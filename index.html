@@ -1156,5 +1156,53 @@ renderRenewals=function(){
 };
 setInterval(kproUpdateTrialCountdowns,1000);
 
+
+
+/* ===== ADMIN TRIAL LIVE TIMER FINAL FIX — RENEWAL DISPLAY ONLY ===== */
+(function(){
+  const previousRenderRenewals = renderRenewals;
+  let adminTrialTicker = null;
+  function fmt(ms){
+    ms=Math.max(0,ms); const total=Math.floor(ms/1000);
+    const d=Math.floor(total/86400), h=Math.floor((total%86400)/3600), m=Math.floor((total%3600)/60), sec=total%60;
+    return `${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(sec).padStart(2,'0')}s`;
+  }
+  function tick(){
+    document.querySelectorAll('.adminTrialCountdown[data-expiry]').forEach(el=>{
+      const t=Date.parse(el.dataset.expiry||''); if(!Number.isFinite(t))return;
+      const ms=t-Date.now();
+      el.textContent=ms<=0?'TRIAL EXPIRED':fmt(ms)+' left';
+      const badge=el.parentElement && el.parentElement.querySelector('.adminTrialBadge');
+      if(badge){ badge.textContent=ms<=0?'Trial Expired':'Trial Active'; badge.className='badge adminTrialBadge '+(ms<=0?'disabled':'active'); }
+    });
+  }
+  renderRenewals=function(){
+    previousRenderRenewals();
+    const trs=[...document.querySelectorAll('#content table tbody tr')];
+    for(const tr of trs){
+      const cells=tr.querySelectorAll('td'); if(cells.length<6)continue;
+      const codeText=(cells[1]?.textContent||'').trim();
+      const r=(allCodes||[]).find(x=>codeText.includes(String(x.code||'')));
+      if(!r)continue;
+      const isTrial=String(r.license_type||'').toLowerCase()==='trial'||String(r.code||'').startsWith('TRIAL-');
+      if(!isTrial)continue;
+      cells[1].innerHTML=`${esc(r.code)}<div class="premiumTag" style="margin-top:5px">TRIAL • 2 DAYS • 1 DEVICE</div>`;
+      const raw=r.trial_expires_at;
+      if(raw){
+        const t=Date.parse(raw), dt=new Date(t), ms=t-Date.now();
+        cells[3].innerHTML=`<b>${esc(dt.toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'medium'}))}</b><div class="subtle">Exact 48-hour expiry</div>`;
+        cells[4].innerHTML=`<span class="badge adminTrialBadge ${ms<=0?'disabled':'active'}">${ms<=0?'Trial Expired':'Trial Active'}</span><div class="subtle adminTrialCountdown" data-expiry="${esc(raw)}">${ms<=0?'TRIAL EXPIRED':fmt(ms)+' left'}</div>`;
+        cells[5].innerHTML=`<button class="btn primary miniBtn" onclick="kproConvertTrial('${esc(r.code)}')">Convert to Paid / Lifetime</button>`;
+      } else {
+        cells[3].innerHTML='<span class="subtle">Starts on first activation</span>';
+        cells[4].innerHTML='<span class="badge">Waiting Activation</span><div class="subtle">48-hour timer starts on first activation</div>';
+        cells[5].innerHTML=`<button class="btn primary miniBtn" onclick="kproConvertTrial('${esc(r.code)}')">Convert to Paid / Lifetime</button>`;
+      }
+    }
+    tick();
+    if(adminTrialTicker)clearInterval(adminTrialTicker);
+    adminTrialTicker=setInterval(tick,1000);
+  };
+})();
 </script>
 </body></html>
