@@ -441,7 +441,7 @@ document.addEventListener('click',()=>{document.querySelectorAll('.actionsMenuLi
 function actionsDropdown(r,keyArg){const id=menuId(r.code);const kArg=keyArg?`,'${keyArg}'`:'';const code=esc(r.code);const canDelete=!pv3StaffMode;return `<div class="actionsMenu"><button type="button" class="actionsMenuBtn" onclick="toggleActionsMenu('${id}',event)">⋮</button><div class="actionsMenuList" id="${id}"><button onclick="copyText('${code}');toggleActionsMenu('${id}')">📋 Copy Code</button><button onclick="toggleActionsMenu('${id}');openEditLicense('${code}'${kArg})">✎ Edit</button><button class="resetItem" onclick="toggleActionsMenu('${id}');resetCode('${code}'${kArg})">↺ Reset Device</button>${r.status==='disabled'?`<button class="successItem" onclick="toggleActionsMenu('${id}');enableCode('${code}'${kArg})">✔ Enable</button>`:`<button class="dangerItem" onclick="toggleActionsMenu('${id}');disableCode('${code}'${kArg})">⛔ Disable</button>`}${String(r.code||'').startsWith('TRIAL-')?`<button class="successItem" onclick="toggleActionsMenu('${id}');convertTrialToPaid('${code}')">★ Convert to Paid / Lifetime</button>`:''}${canDelete?`<button class="deleteItem" onclick="toggleActionsMenu('${id}');deleteDevice('${code}'${kArg})">🗑 Delete</button>`:`<button disabled style="opacity:.4;cursor:not-allowed" title="Staff View is on - Settings la off pannunga">🗑 Delete (hidden)</button>`}</div></div>`}
 function deviceTable(g){return `<div class="tableWrap"><table><thead><tr><th>DEVICE NAME</th><th>DEVICE TYPE</th><th>ACTIVATION CODE</th><th>ACTIVATED ON</th><th>LOGIN LOCATION</th><th>LAST LOGIN</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody>${g.rows.map((r,i)=>{let d=deviceLabel(r,i),loc=[r.login_city,r.login_state,r.login_country].filter(Boolean).join(', ');return `<tr><td><b>${esc(d[0])}</b></td><td>${esc(d[1])}</td><td class="code">${esc(r.code)}${String(r.code||'').startsWith('TRIAL-')?'<div class="premiumTag" style="margin-top:5px">TRIAL • 2 DAYS</div>':''}</td><td>${r.activated_at?new Date(r.activated_at).toLocaleString():'Waiting for activation'}</td><td>${esc(loc||'Not captured yet')}</td><td>${r.last_login_at?new Date(r.last_login_at).toLocaleString():'-'}</td><td><span class="badge ${esc(r.status)}">${esc(r.status)}</span></td><td>${actionsDropdown(r,encodeURIComponent(g.key))}</td></tr>`}).join('')}</tbody></table></div>`}
 function renderAdd(){ $('content').innerHTML=`<h2>Add License</h2><div class="card"><h3>Create New Customer License</h3><p class="muted">First device or a fresh customer license.</p><div class="formGrid"><input id="customerName" class="field" placeholder="Customer / Shop Name"><input id="mobile" class="field" inputmode="numeric" placeholder="Mobile Number"><input id="amount" class="field" type="number" value="${defaultDevicePrice()}" placeholder="Amount"><button class="btn primary" onclick="generateNew()">Create Paid License</button><button class="btn ghost" onclick="generateTrial()">Create 2-Day Trial</button></div><div id="newCodeArea"></div></div>`}
-async function generateTrial(){let name=$('customerName').value.trim(),mobile=$('mobile').value.trim();if(!name||!mobile)return alert('Customer name and mobile number enter pannunga.');let {data,error}=await sb.rpc('kpro_admin_generate_trial_code',{p_password:adminPass,p_customer_name:name,p_mobile:mobile});if(error||!data?.ok)return alert(error?.message||data?.message||'Failed');await refresh(true);$('newCodeArea').innerHTML=`<div class="card lav" style="margin-top:15px;text-align:center"><div class="premiumTag">TRIAL • 2 DAYS • 1 DEVICE</div><div class="code" style="font-size:26px;margin:12px">${esc(data.code)}</div><div class="muted">Expires exactly 48 hours after creation. Customer data will remain safe.</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="btn ghost" onclick="copyText('${esc(data.code)}')">Copy Code</button><button class="btn success" onclick="shareWhatsApp('${esc(data.code)}','${esc(name)}')">WhatsApp Share</button></div></div>`}
+async function generateTrial(){let name=$('customerName').value.trim(),mobile=$('mobile').value.trim();if(!name||!mobile)return alert('Customer name and mobile number enter pannunga.');let {data,error}=await sb.rpc('kpro_admin_generate_trial_code',{p_password:adminPass,p_customer_name:name,p_mobile:mobile});if(error||!data?.ok)return alert(error?.message||data?.message||'Failed');await refresh(true);$('newCodeArea').innerHTML=`<div class="card lav" style="margin-top:15px;text-align:center"><div class="premiumTag">TRIAL • 2 DAYS • 1 DEVICE</div><div class="code" style="font-size:26px;margin:12px">${esc(data.code)}</div><div class="muted">48-hour timer starts only on the customer's FIRST device activation. Customer data will remain safe.</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px"><button class="btn ghost" onclick="copyText('${esc(data.code)}')">Copy Code</button><button class="btn success" onclick="shareWhatsApp('${esc(data.code)}','${esc(name)}')">WhatsApp Share</button></div></div>`}
 async function convertTrialToPaid(code){let amount=Number(prompt('Paid / Lifetime amount',String(defaultDevicePrice()))||0);if(amount<0)return;let {data,error}=await sb.rpc('kpro_admin_convert_to_paid',{p_password:adminPass,p_code:code,p_amount:amount});if(error||!data?.ok)return alert(error?.message||data?.message||'Convert failed');await refresh(true);toast(data.message||'Converted to Paid / Lifetime');if(currentCustomer)openCustomer(encodeURIComponent(currentCustomer.key));else renderCodes()}
 async function generateNew(){let name=$('customerName').value.trim(),mobile=$('mobile').value.trim(),amount=Number($('amount').value||defaultDevicePrice());if(!name||!mobile)return alert('Customer name and mobile number enter pannunga.');let {data,error}=await sb.rpc('kpro_admin_generate_code',{p_password:adminPass,p_customer_name:name,p_mobile:mobile,p_amount:amount});if(error||!data?.ok)return alert(error?.message||data?.message||'Failed');await refresh(true);$('newCodeArea').innerHTML=`<div class="card lav" style="margin-top:15px;text-align:center"><div class="muted">New license created</div><div class="code" style="font-size:26px;margin:12px">${esc(data.code)}</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn ghost" onclick="copyText('${esc(data.code)}')">Copy Code</button><button class="btn success" onclick="shareWhatsApp('${esc(data.code)}','${esc(name)}')">WhatsApp Share</button></div></div>`}
 
@@ -1112,5 +1112,49 @@ renderRenewals=function(){
     if(tds[5])tds[5].innerHTML=`<button class="btn primary miniBtn" onclick="kproConvertTrial('${esc(code.code)}')">Convert to Paid / Lifetime</button>`;
   });
 };
+
+
+/* ===== EXACT 48-HOUR TRIAL TIMER — DISPLAY ONLY; PAID FLOW UNCHANGED ===== */
+function kproFmtRemain(ms){
+  ms=Math.max(0,ms); const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60),sec=s%60;
+  return `${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(sec).padStart(2,'0')}s`;
+}
+function kproUpdateTrialCountdowns(){
+  document.querySelectorAll('[data-trial-expiry]').forEach(el=>{
+    const raw=el.getAttribute('data-trial-expiry'); if(!raw)return;
+    const ms=new Date(raw).getTime()-Date.now();
+    const left=el.querySelector('.kproTrialLeft');
+    if(left) left.textContent=ms<=0?'TRIAL EXPIRED':kproFmtRemain(ms)+' left';
+    el.classList.toggle('trialExpired',ms<=0);
+  });
+}
+function kproTrialRenewalCell(r){
+  const raw=r.trial_expires_at; if(!raw)return '<span class="badge">Waiting Activation</span><div class="subtle">48-hour timer starts on first activation</div>';
+  const dt=new Date(raw),ms=dt-Date.now();
+  return `<div data-trial-expiry="${esc(raw)}"><span class="badge ${ms<=0?'disabled':'active'}">${ms<=0?'Trial Expired':'Trial Active'}</span><div class="subtle kproTrialLeft">${ms<=0?'TRIAL EXPIRED':kproFmtRemain(ms)+' left'}</div></div>`;
+}
+function kproTrialExpiryCell(r){
+  if(!r.trial_expires_at)return '<span class="subtle">Starts on first activation</span>';
+  const d=new Date(r.trial_expires_at);
+  return `<b>${esc(d.toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}))}</b><div class="subtle">Exact 48-hour expiry</div>`;
+}
+const _kproExactOldRenderRenewals=renderRenewals;
+renderRenewals=function(){
+  _kproExactOldRenderRenewals();
+  const rows=[...document.querySelectorAll('#content table tbody tr')];
+  rows.forEach(tr=>{
+    const codeCell=tr.querySelector('td.code'); if(!codeCell)return;
+    const r=(allCodes||[]).find(x=>codeCell.textContent.includes(x.code)); if(!r)return;
+    const isTrial=r.license_type==='trial'||String(r.code||'').startsWith('TRIAL-'); if(!isTrial)return;
+    const tds=tr.querySelectorAll('td');
+    codeCell.innerHTML=`${esc(r.code)}<div class="premiumTag" style="margin-top:5px">TRIAL • 2 DAYS • 1 DEVICE</div>`;
+    if(tds[3])tds[3].innerHTML=kproTrialExpiryCell(r);
+    if(tds[4])tds[4].innerHTML=kproTrialRenewalCell(r);
+    if(tds[5])tds[5].innerHTML=`<button class="btn primary miniBtn" onclick="kproConvertTrial('${esc(r.code)}')">Convert to Paid / Lifetime</button>`;
+  });
+  kproUpdateTrialCountdowns();
+};
+setInterval(kproUpdateTrialCountdowns,1000);
+
 </script>
 </body></html>
