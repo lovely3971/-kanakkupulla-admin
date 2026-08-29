@@ -1066,5 +1066,51 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
+
+
+/* ===== TRIAL EXPIRY + CONVERT TO PAID UI ===== */
+function kproTrialInfo(r){
+  const isTrial=(r.license_type==='trial') || String(r.code||'').startsWith('TRIAL-');
+  if(!isTrial)return '';
+  const raw=r.trial_expires_at;
+  if(!raw)return '<div class="subtle" style="margin-top:5px">Trial expiry syncing…</div>';
+  const dt=new Date(raw), ms=dt-Date.now();
+  const when=dt.toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});
+  if(ms<=0)return `<div class="badge disabled" style="margin-top:5px">TRIAL EXPIRED</div><div class="subtle">Expired: ${esc(when)}</div>`;
+  const hrs=Math.floor(ms/3600000), mins=Math.max(0,Math.floor((ms%3600000)/60000));
+  return `<div class="premiumTag" style="margin-top:5px">TRIAL • ${hrs}H ${mins}M LEFT</div><div class="subtle">Expires: ${esc(when)}</div>`;
+}
+async function kproConvertTrial(code){
+  const row=(allCodes||[]).find(r=>r.code===code);
+  if(!row)return;
+  const entered=prompt('Paid / Lifetime amount (₹):',String(row.amount||1000));
+  if(entered===null)return;
+  const amount=Number(entered||0);
+  if(!confirm('Convert '+code+' from 2-Day Trial to Paid / Lifetime?\n\nSame activation code will continue. Customer data will remain safe.'))return;
+  const {data,error}=await sb.rpc('kpro_admin_convert_trial_to_paid',{p_password:adminPass,p_code:code,p_amount:amount});
+  if(error||data?.ok===false){alert(error?.message||data?.message||'Convert failed');return}
+  await refresh(true); pLog('Trial converted to Paid / Lifetime: '+code); toast('Converted to Paid / Lifetime'); renderRenewals(); updatePremiumBell();
+}
+const _kproTrialRenderRenewals=renderRenewals;
+renderRenewals=function(){
+  _kproTrialRenderRenewals();
+  const tbody=document.querySelector('#content table tbody');
+  if(!tbody)return;
+  [...tbody.querySelectorAll('tr')].forEach((tr,i)=>{
+    const r=(allCodes||[])[i];
+  });
+  const rows=[...document.querySelectorAll('#content table tbody tr')];
+  rows.forEach(tr=>{
+    const codeCell=tr.querySelector('td.code'); if(!codeCell)return;
+    const code=(allCodes||[]).find(r=>codeCell.textContent.includes(r.code)); if(!code)return;
+    const isTrial=(code.license_type==='trial')||String(code.code||'').startsWith('TRIAL-');
+    if(!isTrial)return;
+    codeCell.innerHTML=`${esc(code.code)}${kproTrialInfo(code)}`;
+    const tds=tr.querySelectorAll('td');
+    if(tds[3])tds[3].innerHTML=code.trial_expires_at?`<b>${esc(new Date(code.trial_expires_at).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}))}</b><div class="subtle">Automatic 48-hour trial expiry</div>`:'<span class="subtle">Syncing trial expiry…</span>';
+    if(tds[4]){const ms=code.trial_expires_at?new Date(code.trial_expires_at)-Date.now():null;tds[4].innerHTML=ms===null?'<span class="badge">Trial</span>':ms<=0?'<span class="badge disabled">Expired</span>':`<span class="badge active">Trial Active</span><div class="subtle">${Math.floor(ms/3600000)}h ${Math.max(0,Math.floor((ms%3600000)/60000))}m left</div>`;}
+    if(tds[5])tds[5].innerHTML=`<button class="btn primary miniBtn" onclick="kproConvertTrial('${esc(code.code)}')">Convert to Paid / Lifetime</button>`;
+  });
+};
 </script>
 </body></html>
