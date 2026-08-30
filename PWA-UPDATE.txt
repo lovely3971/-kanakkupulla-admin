@@ -1,0 +1,4 @@
+PWA UPDATE FINAL
+- Uses the user-approved KANAKKU pulla ADMIN logo exactly for app icons and opening splash.
+- Root PWA shell only updated.
+- bill/index.html and pro/index.html preserved unchanged from the working combo package.
