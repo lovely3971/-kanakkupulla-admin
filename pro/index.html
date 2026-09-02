@@ -1282,4 +1282,66 @@ setInterval(kproUpdateTrialCountdowns,1000);
   };
 })();
 </script>
+<style>
+/* ===== MOBILE FIT + TOP LOGOUT V5 ===== */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.app,.main,#content,.topbar,.adminToolRow,.section,.card,.premiumPanel{min-width:0;max-width:100%}
+.main{width:100%;overflow-x:hidden}
+.tableWrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.field,select,textarea,.btn{max-width:100%}
+.sectionHead,.topbar{flex-wrap:wrap}
+.adminTopLogout{border:1px solid #efb9b9;background:#fff0f0;color:#b42323;border-radius:11px;padding:8px 11px;font-weight:850;white-space:nowrap;box-shadow:0 3px 10px #152a4e0b}
+.logoutConfirmBack{position:fixed;inset:0;z-index:10000;background:#081226b8;display:grid;place-items:center;padding:18px}
+.logoutConfirmCard{width:min(390px,100%);background:#fff;color:#17213d;border-radius:22px;padding:22px;box-shadow:0 24px 70px #0005;border:1px solid #dfe6ef}
+.logoutConfirmCard h3{margin:0 0 8px;font-size:22px}.logoutConfirmCard p{margin:0;color:#667085;line-height:1.5}
+.logoutConfirmBtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.logoutCancel,.logoutConfirm{border:0;border-radius:13px;padding:13px 12px;font-weight:850}
+.logoutCancel{background:#eef3f9;color:#1c3a6e}.logoutConfirm{background:#d94343;color:#fff}
+@media(max-width:560px){
+  .cards{grid-template-columns:1fr!important}
+  .main{padding-left:10px!important;padding-right:10px!important}
+  .topbar{margin-left:-10px!important;margin-right:-10px!important;padding-left:10px!important;padding-right:10px!important}
+  .topbar .admin{display:none!important}
+  .adminToolRow{display:grid!important;grid-template-columns:42px repeat(3,minmax(0,1fr));gap:5px!important;width:100%}
+  .adminToolBtn,.adminTopLogout{min-width:0!important;width:100%;padding:8px 5px!important;font-size:11px!important;text-align:center}
+  .mobileMenu{width:42px!important;min-width:42px!important;padding:8px 5px!important}
+  .sectionHead{align-items:flex-start;flex-direction:column}
+  .sectionHead>*{max-width:100%}
+  h1,h2,h3{overflow-wrap:anywhere}
+}
+</style>
+<script>
+function adminLogoutConfirmChoice(){
+  return new Promise(resolve=>{
+    const old=document.getElementById('logoutConfirmBack'); if(old)old.remove();
+    const back=document.createElement('div'); back.id='logoutConfirmBack'; back.className='logoutConfirmBack';
+    back.innerHTML='<div class="logoutConfirmCard" role="dialog" aria-modal="true" aria-labelledby="logoutConfirmTitle"><h3 id="logoutConfirmTitle">Logout?</h3><p>Kanakku Admin-la irundhu logout panna venduma?</p><div class="logoutConfirmBtns"><button type="button" class="logoutCancel">Cancel</button><button type="button" class="logoutConfirm">Confirm</button></div></div>';
+    document.body.appendChild(back);
+    const finish=value=>{back.remove();resolve(value)};
+    back.querySelector('.logoutCancel').onclick=()=>finish(false);
+    back.querySelector('.logoutConfirm').onclick=()=>finish(true);
+    back.addEventListener('click',e=>{if(e.target===back)finish(false)});
+  });
+}
+async function adminLogoutFromTop(){
+  if(!(await adminLogoutConfirmChoice()))return;
+  adminPass='';
+  try{sessionStorage.removeItem('kanakku_admin_session_pw')}catch(e){}
+  location.reload();
+}
+(function installTopLogout(){
+  const install=()=>{
+    const refresh=document.getElementById('adminRefreshBtn');
+    if(refresh&&!document.getElementById('adminTopLogoutBtn')){
+      const button=document.createElement('button');
+      button.id='adminTopLogoutBtn';button.type='button';button.className='adminTopLogout';
+      button.innerHTML='↪ <span class="toolText">Logout</span>';
+      button.onclick=adminLogoutFromTop;
+      refresh.insertAdjacentElement('afterend',button);
+    }
+    const side=document.getElementById('logoutBtn');if(side)side.onclick=adminLogoutFromTop;
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script>
 </body></html>
