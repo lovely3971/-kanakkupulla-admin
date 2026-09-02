@@ -1,0 +1,24 @@
+FIX NOTES - V5 review pass
+---------------------------
+Reviewed: index.html (BILL/PRO/SELECT switcher), bill/index.html, pro/index.html
+
+RESULT: Mobile responsiveness, safe-area handling, table horizontal-scroll
+containment, and the Logout (Cancel/Confirm) flow were already correctly
+implemented in this V5 package. No changes were made to any of that.
+
+GENUINE BUG FOUND AND FIXED:
+BILL admin and PRO admin are served from the same origin (root domain,
+/bill/ and /pro/) and share browser storage. bill/index.html was reusing
+the exact same localStorage/sessionStorage key names as pro/index.html
+(theme, device price, staff PIN, coupons, notes, refunds, activity log,
+expiry, confirm-PIN, dark mode, auto-lock minutes, and the session
+password). This meant changing a setting or logging into one admin could
+silently overwrite/read the other admin's saved data.
+
+FIX: Renamed all 11 localStorage keys and the sessionStorage session-
+password key inside bill/index.html to BILL-specific names
+(e.g. kpro_admin_theme_v1 -> kbill_admin_theme_v1,
+kanakku_admin_activity_v1 -> kanakku_bill_admin_activity_v1,
+kanakku_admin_session_pw -> kanakku_bill_admin_session_pw, etc).
+pro/index.html was left completely untouched. No Supabase URL, key,
+table name, function name, or RPC call was touched anywhere.

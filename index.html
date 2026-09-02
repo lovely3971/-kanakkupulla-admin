@@ -65,6 +65,14 @@ button{font:inherit}
 .splashBox{text-align:center;color:#fff;padding:24px}
 .splashLogo{width:min(260px,72vw);height:auto;aspect-ratio:1/1;object-fit:contain;border-radius:28px;box-shadow:0 14px 40px rgba(0,0,0,.28);margin-bottom:16px}
 .splashTitle{font-size:27px;font-weight:900;letter-spacing:-.03em}.splashSub{margin-top:5px;color:#ffcf58;font-weight:800;font-size:13px;letter-spacing:.12em}.splashBrand{margin-top:12px;color:#b9c2d8;font-size:10px;font-weight:800;letter-spacing:.16em}
+/* Mobile safe-area and selector visibility */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+#workspace,#adminFrame,#switcher{width:100%;max-width:100%}
+@media(max-width:720px){
+  #switcher{height:calc(62px + env(safe-area-inset-top));padding:calc(8px + env(safe-area-inset-top)) 8px 8px;gap:6px}
+  #workspace{top:calc(62px + env(safe-area-inset-top))}
+  #switcher button{display:block!important;min-width:0;padding:10px 6px;font-size:11px;white-space:nowrap}
+}
 </style>
 </head>
 <body>
