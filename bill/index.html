@@ -352,8 +352,8 @@ document.addEventListener('click',function(e){
 function setMiniLoading(on,text='Refreshing...'){const el=$('miniLoading');if(!el)return;if($('miniLoadingText'))$('miniLoadingText').textContent=text;el.classList.toggle('show',on)}
 async function withMiniLoading(fn,text='Refreshing...'){setMiniLoading(true,text);try{return await fn()}finally{setMiniLoading(false)}}
 
-const ADMIN_THEME_KEY='kpro_admin_theme_v1';
-const DEVICE_PRICE_KEY='kpro_device_price_v1';
+const ADMIN_THEME_KEY='kbill_admin_theme_v1';
+const DEVICE_PRICE_KEY='kbill_device_price_v1';
 function defaultDevicePrice(){return Number(localStorage.getItem(DEVICE_PRICE_KEY)||1000)}
 function applyAdminTheme(){
   document.body.classList.remove('theme-pink','theme-purple');
@@ -398,8 +398,8 @@ async function loadAdminProfile(){
   applyAdminProfile();
 }
 
-async function login(){return withAdminLoading(async()=>{let p=$('adminPassword').value; $('loginMsg').textContent='Checking...';let {data,error}=await sb.rpc('kpro_admin_list_codes',{p_password:p});if(error){$('loginMsg').textContent=error.message;return}adminPass=p;allCodes=data||[];if($('rememberDevice')?.checked)sessionStorage.setItem('kanakku_admin_session_pw',p);else sessionStorage.removeItem('kanakku_admin_session_pw');await loadAdminProfile();$('loginGate').classList.add('hidden');$('app').classList.remove('hidden');$('bottomNav').classList.remove('hidden');show('dashboard')},'Opening Admin...')}
-$('loginBtn').onclick=login;$('adminPassword').addEventListener('keydown',e=>{if(e.key==='Enter')login()});if($('adminPasswordEye'))$('adminPasswordEye').onclick=()=>{const f=$('adminPassword');f.type=f.type==='password'?'text':'password'};const savedAdminPw=sessionStorage.getItem('kanakku_admin_session_pw');if(savedAdminPw){$('adminPassword').value=savedAdminPw;if($('rememberDevice'))$('rememberDevice').checked=true;}$('logoutBtn').onclick=async()=>{const yes=await askYesNo('Logout?','KANAKKU PRO License Admin-la irundhu logout panna venduma?');if(yes){adminPass='';location.reload();}};
+async function login(){return withAdminLoading(async()=>{let p=$('adminPassword').value; $('loginMsg').textContent='Checking...';let {data,error}=await sb.rpc('kpro_admin_list_codes',{p_password:p});if(error){$('loginMsg').textContent=error.message;return}adminPass=p;allCodes=data||[];if($('rememberDevice')?.checked)sessionStorage.setItem('kanakku_bill_admin_session_pw',p);else sessionStorage.removeItem('kanakku_bill_admin_session_pw');await loadAdminProfile();$('loginGate').classList.add('hidden');$('app').classList.remove('hidden');$('bottomNav').classList.remove('hidden');show('dashboard')},'Opening Admin...')}
+$('loginBtn').onclick=login;$('adminPassword').addEventListener('keydown',e=>{if(e.key==='Enter')login()});if($('adminPasswordEye'))$('adminPasswordEye').onclick=()=>{const f=$('adminPassword');f.type=f.type==='password'?'text':'password'};const savedAdminPw=sessionStorage.getItem('kanakku_bill_admin_session_pw');if(savedAdminPw){$('adminPassword').value=savedAdminPw;if($('rememberDevice'))$('rememberDevice').checked=true;}$('logoutBtn').onclick=async()=>{const yes=await askYesNo('Logout?','KANAKKU PRO License Admin-la irundhu logout panna venduma?');if(yes){adminPass='';location.reload();}};
 async function refresh(silent=false){let {data,error}=await sb.rpc('kpro_admin_list_codes',{p_password:adminPass});if(error){if(!silent)alert(error.message);return false}allCodes=data||[];return true}
 function groups(){let map=new Map;allCodes.forEach(r=>{let key=(r.mobile||'')+'|'+(r.customer_name||'');if(!map.has(key))map.set(key,{key,name:r.customer_name||'Unnamed Customer',mobile:r.mobile||'-',rows:[]});map.get(key).rows.push(r)});return [...map.values()]}
 function stats(){let gs=groups(),active=allCodes.filter(x=>x.status==='active').length,rev=allCodes.reduce((s,x)=>s+Number(x.amount||0),0);return {customers:gs.length,devices:allCodes.length,active,rev}}
@@ -681,9 +681,9 @@ if($('editModalSave'))$('editModalSave').onclick=saveEditLicense;
 
 
 /* ===== PREMIUM ADMIN CENTER ADD-ON ===== */
-const PREMIUM_EXPIRY_KEY='kanakku_admin_expiry_v1';
-const PREMIUM_ACTIVITY_KEY='kanakku_admin_activity_v1';
-const PREMIUM_AUTOLOCK_KEY='kanakku_admin_autolock_minutes';
+const PREMIUM_EXPIRY_KEY='kanakku_bill_admin_expiry_v1';
+const PREMIUM_ACTIVITY_KEY='kanakku_bill_admin_activity_v1';
+const PREMIUM_AUTOLOCK_KEY='kanakku_bill_admin_autolock_minutes';
 let premiumCustomerStatus='all';
 let premiumLastRefreshOk=true;
 function pLoad(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch(e){return fallback}}
@@ -713,7 +713,7 @@ renderReports=function(){let s=stats();$('content').innerHTML=`<div class="secti
 const _oldRenderSettings=renderSettings;
 renderSettings=function(){_oldRenderSettings();let c=document.getElementById('content');let mins=Number(localStorage.getItem(PREMIUM_AUTOLOCK_KEY)||0);c.insertAdjacentHTML('beforeend',`<div class="card section"><h3 style="margin-top:0">Admin Security</h3><p class="muted">Optional auto-lock for this device. 0 = Off.</p><div class="settingsGrid"><div><div class="label">Auto-lock after inactivity (minutes)</div><input id="premiumAutoLock" class="field" type="number" min="0" max="240" value="${mins}"></div><div style="display:flex;align-items:end"><button class="btn primary" onclick="savePremiumSecurity()">Save Security</button></div></div></div><div class="card section"><h3 style="margin-top:0">System Status</h3><div class="systemLine"><span>Internet</span><b>${navigator.onLine?'Online ✅':'Offline ⚠️'}</b></div><div class="systemLine"><span>Supabase data sync</span><b>${premiumLastRefreshOk?'Connected ✅':'Needs refresh ⚠️'}</b></div><div class="systemLine"><span>Stored activity entries</span><b>${pLoad(PREMIUM_ACTIVITY_KEY,[]).length}</b></div><div class="systemLine"><span>Renewal dates set</span><b>${Object.keys(pExpiry()).length}</b></div></div>`)}
 function savePremiumSecurity(){let n=Math.max(0,Math.min(240,Number(document.getElementById('premiumAutoLock').value||0)));localStorage.setItem(PREMIUM_AUTOLOCK_KEY,String(n));pLog('Auto-lock setting changed to '+n+' minute(s)');toast('Security setting saved');resetPremiumAutoLock()}
-let premiumAutoTimer=null;function resetPremiumAutoLock(){clearTimeout(premiumAutoTimer);let n=Number(localStorage.getItem(PREMIUM_AUTOLOCK_KEY)||0);if(n>0&&!document.getElementById('app').classList.contains('hidden'))premiumAutoTimer=setTimeout(()=>{pLog('Admin auto-locked after inactivity');adminPass='';sessionStorage.removeItem('kanakku_admin_session_pw');location.reload()},n*60000)}
+let premiumAutoTimer=null;function resetPremiumAutoLock(){clearTimeout(premiumAutoTimer);let n=Number(localStorage.getItem(PREMIUM_AUTOLOCK_KEY)||0);if(n>0&&!document.getElementById('app').classList.contains('hidden'))premiumAutoTimer=setTimeout(()=>{pLog('Admin auto-locked after inactivity');adminPass='';sessionStorage.removeItem('kanakku_bill_admin_session_pw');location.reload()},n*60000)}
 ['click','touchstart','keydown'].forEach(ev=>document.addEventListener(ev,resetPremiumAutoLock,{passive:true}));
 const _premiumOldShow=show;
 show=function(v){applyAdminTheme();setActive(v);currentCustomer=null;if(v==='dashboard')renderDashboard();else if(v==='customers')renderCustomers();else if(v==='add')renderAdd();else if(v==='codes')renderCodes();else if(v==='renewals')renderRenewals();else if(v==='activity')renderActivity();else if(v==='payments')renderPayments();else if(v==='reports')renderReports();else if(v==='profile')renderProfile();else renderSettings();resetPremiumAutoLock()}
@@ -728,12 +728,12 @@ setTimeout(()=>{let b=document.getElementById('premiumBell');if(b)b.onclick=togg
 
 
 /* ================= V3 PREMIUM PACK ================= */
-const PV3_COUPONS_KEY='kanakku_admin_coupons_v1';
-const PV3_NOTES_KEY='kanakku_admin_notes_v1';
-const PV3_REFUNDS_KEY='kanakku_admin_refunds_v1';
-const PV3_DARK_KEY='kanakku_admin_dark_v1';
-const PV3_STAFFPIN_KEY='kanakku_admin_staffpin_v1';
-const PV3_CONFIRMPIN_KEY='kanakku_admin_confirmpin_v1';
+const PV3_COUPONS_KEY='kanakku_bill_admin_coupons_v1';
+const PV3_NOTES_KEY='kanakku_bill_admin_notes_v1';
+const PV3_REFUNDS_KEY='kanakku_bill_admin_refunds_v1';
+const PV3_DARK_KEY='kanakku_bill_admin_dark_v1';
+const PV3_STAFFPIN_KEY='kanakku_bill_admin_staffpin_v1';
+const PV3_CONFIRMPIN_KEY='kanakku_bill_admin_confirmpin_v1';
 let pv3StaffMode=false;
 
 /* ---------- generic local store helpers (reuse pLoad/pSave) ---------- */
@@ -1049,5 +1049,67 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
+</script>
+<style>
+/* ===== MOBILE FIT + TOP LOGOUT V5 ===== */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.app,.main,#content,.topbar,.adminToolRow,.section,.card,.premiumPanel{min-width:0;max-width:100%}
+.main{width:100%;overflow-x:hidden}
+.tableWrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.field,select,textarea,.btn{max-width:100%}
+.sectionHead,.topbar{flex-wrap:wrap}
+.adminTopLogout{border:1px solid #efb9b9;background:#fff0f0;color:#b42323;border-radius:11px;padding:8px 11px;font-weight:850;white-space:nowrap;box-shadow:0 3px 10px #152a4e0b}
+.logoutConfirmBack{position:fixed;inset:0;z-index:10000;background:#081226b8;display:grid;place-items:center;padding:18px}
+.logoutConfirmCard{width:min(390px,100%);background:#fff;color:#17213d;border-radius:22px;padding:22px;box-shadow:0 24px 70px #0005;border:1px solid #dfe6ef}
+.logoutConfirmCard h3{margin:0 0 8px;font-size:22px}.logoutConfirmCard p{margin:0;color:#667085;line-height:1.5}
+.logoutConfirmBtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.logoutCancel,.logoutConfirm{border:0;border-radius:13px;padding:13px 12px;font-weight:850}
+.logoutCancel{background:#eef3f9;color:#1c3a6e}.logoutConfirm{background:#d94343;color:#fff}
+@media(max-width:560px){
+  .cards{grid-template-columns:1fr!important}
+  .main{padding-left:10px!important;padding-right:10px!important}
+  .topbar{margin-left:-10px!important;margin-right:-10px!important;padding-left:10px!important;padding-right:10px!important}
+  .topbar .admin{display:none!important}
+  .adminToolRow{display:grid!important;grid-template-columns:42px repeat(3,minmax(0,1fr));gap:5px!important;width:100%}
+  .adminToolBtn,.adminTopLogout{min-width:0!important;width:100%;padding:8px 5px!important;font-size:11px!important;text-align:center}
+  .mobileMenu{width:42px!important;min-width:42px!important;padding:8px 5px!important}
+  .sectionHead{align-items:flex-start;flex-direction:column}
+  .sectionHead>*{max-width:100%}
+  h1,h2,h3{overflow-wrap:anywhere}
+}
+</style>
+<script>
+function adminLogoutConfirmChoice(){
+  return new Promise(resolve=>{
+    const old=document.getElementById('logoutConfirmBack'); if(old)old.remove();
+    const back=document.createElement('div'); back.id='logoutConfirmBack'; back.className='logoutConfirmBack';
+    back.innerHTML='<div class="logoutConfirmCard" role="dialog" aria-modal="true" aria-labelledby="logoutConfirmTitle"><h3 id="logoutConfirmTitle">Logout?</h3><p>Kanakku Admin-la irundhu logout panna venduma?</p><div class="logoutConfirmBtns"><button type="button" class="logoutCancel">Cancel</button><button type="button" class="logoutConfirm">Confirm</button></div></div>';
+    document.body.appendChild(back);
+    const finish=value=>{back.remove();resolve(value)};
+    back.querySelector('.logoutCancel').onclick=()=>finish(false);
+    back.querySelector('.logoutConfirm').onclick=()=>finish(true);
+    back.addEventListener('click',e=>{if(e.target===back)finish(false)});
+  });
+}
+async function adminLogoutFromTop(){
+  if(!(await adminLogoutConfirmChoice()))return;
+  adminPass='';
+  try{sessionStorage.removeItem('kanakku_bill_admin_session_pw')}catch(e){}
+  location.reload();
+}
+(function installTopLogout(){
+  const install=()=>{
+    const refresh=document.getElementById('adminRefreshBtn');
+    if(refresh&&!document.getElementById('adminTopLogoutBtn')){
+      const button=document.createElement('button');
+      button.id='adminTopLogoutBtn';button.type='button';button.className='adminTopLogout';
+      button.innerHTML='↪ <span class="toolText">Logout</span>';
+      button.onclick=adminLogoutFromTop;
+      refresh.insertAdjacentElement('afterend',button);
+    }
+    const side=document.getElementById('logoutBtn');if(side)side.onclick=adminLogoutFromTop;
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
 </script>
 </body></html>
