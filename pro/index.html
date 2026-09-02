@@ -493,7 +493,24 @@ async function shareWhatsApp(code,name){
     catch(e){prompt('Copy this WhatsApp message',text);}
   }
 }
-async function addDevice(k){let key=decodeURIComponent(k),g=groups().find(x=>x.key===key);if(!g)return; if(!(await askYesNo('Add Device?',`Add one more device for ${g.name} at ${money(defaultDevicePrice())}?`)))return;let {data,error}=await sb.rpc('kpro_admin_generate_code',{p_password:adminPass,p_customer_name:g.name,p_mobile:g.mobile,p_amount:defaultDevicePrice()});if(error||!data?.ok)return alert(error?.message||data?.message||'Failed');await refresh(true);toast('New device code created: '+data.code);openCustomer(encodeURIComponent(key))}
+async function addDevice(k){
+  let key=decodeURIComponent(k),g=groups().find(x=>x.key===key);
+  if(!g)return;
+  const isTrialCustomer=g.rows.some(r=>String(r.license_type||'').toLowerCase()==='trial'||(!r.license_type&&String(r.code||'').startsWith('TRIAL-')));
+  const question=isTrialCustomer
+    ?`Add one more 2-day trial device for ${g.name}? Its own 48-hour timer will start on first activation.`
+    :`Add one more device for ${g.name} at ${money(defaultDevicePrice())}?`;
+  if(!(await askYesNo('Add Device?',question)))return;
+  const rpcName=isTrialCustomer?'kpro_admin_generate_trial_code':'kpro_admin_generate_code';
+  const params=isTrialCustomer
+    ?{p_password:adminPass,p_customer_name:g.name,p_mobile:g.mobile}
+    :{p_password:adminPass,p_customer_name:g.name,p_mobile:g.mobile,p_amount:defaultDevicePrice()};
+  let {data,error}=await sb.rpc(rpcName,params);
+  if(error||!data?.ok)return alert(error?.message||data?.message||'Failed');
+  await refresh(true);
+  toast((isTrialCustomer?'New 2-day trial device code created: ':'New device code created: ')+data.code);
+  openCustomer(encodeURIComponent(key));
+}
 function renderCodes(){ $('content').innerHTML=`<div class="sectionHead"><div><h2>All Activation Codes</h2><p class="muted">Every code is controlled separately.</p></div><button class="btn ghost" onclick="refreshCodes()">Refresh</button></div><div class="card">${codesTable(allCodes)}</div>`}
 function codesTable(list){return `<div class="tableWrap"><table><thead><tr><th>CODE</th><th>CUSTOMER</th><th>MOBILE</th><th>AMOUNT</th><th>STATUS</th><th>ACTIVATED</th><th>ACTIONS</th></tr></thead><tbody>${list.map(r=>`<tr><td class="code">${esc(r.code)}${((String(r.license_type||'').toLowerCase()==='trial')||(!r.license_type&&String(r.code||'').startsWith('TRIAL-')))?'<div class="premiumTag" style="margin-top:5px">TRIAL • 2 DAYS</div>':''}</td><td>${esc(r.customer_name||'-')}</td><td>${esc(r.mobile||'-')}</td><td>${money(r.amount)}</td><td><span class="badge ${esc(r.status)}">${esc(r.status)}</span></td><td>${r.activated_at?new Date(r.activated_at).toLocaleString():'-'}</td><td>${actionsDropdown(r,'')}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">No activation codes yet</td></tr>'}</tbody></table></div>`}
 async function refreshCodes(){await refresh();renderCodes()}
