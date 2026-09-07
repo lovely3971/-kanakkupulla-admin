@@ -11,7 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
 *{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial;color:#111827;background:linear-gradient(135deg,#fff8fb,#f7f4ff 55%,#f2fffb);min-height:100vh}.hidden{display:none!important}button,input{font:inherit}button{cursor:pointer}.login{position:fixed;inset:0;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#fff0f6,#f4efff,#effff8);z-index:50}.loginCard{width:min(430px,100%);background:#fff;border:1px solid #f0e8f4;border-radius:28px;padding:28px;box-shadow:0 24px 70px #8b5cf622}.logo{width:150px;height:95px;object-fit:contain;display:block;margin:auto}.login h1{text-align:center;margin:4px 0;color:#d9468f}.muted{color:#718096;font-size:13px}.field{width:100%;border:1px solid #e5e7eb;border-radius:14px;padding:13px 14px;background:#fff;outline:none}.field:focus{border-color:#e879b5;box-shadow:0 0 0 3px #fce7f3}.btn{border:0;border-radius:12px;padding:11px 15px;font-weight:750}.primary{color:#fff;background:linear-gradient(90deg,#df5aa0,#9b6ee8)}.ghost{background:#f3f0ff;color:#5b4b9a}.danger{background:#fff0f3;color:#d61f45}.reset{background:#edf7ff;color:#2778b9}.success{background:#eafaf1;color:#16864b}.app{display:grid;grid-template-columns:245px 1fr;min-height:100vh}
 @media(min-width:1500px){.app{grid-template-columns:270px minmax(0,1400px);justify-content:center}.main{padding:28px 40px 90px}}
-@media(min-width:951px) and (max-width:1180px){.cards{grid-template-columns:repeat(2,1fr)}.detailGrid{grid-template-columns:1fr}}.side{padding:24px 16px;background:#fff9fdcc;border-right:1px solid #f0e7f2;position:sticky;top:0;height:100vh}.side .logo{width:165px;height:105px}.nav button{width:100%;text-align:left;margin:4px 0;background:transparent;border:0;border-radius:12px;padding:12px;color:#374151}.nav button.active{background:linear-gradient(90deg,#ed78b3,#a578e8);color:#fff}.main{padding:22px 28px 90px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.admin{display:flex;gap:10px;align-items:center}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#f4e8ff;color:#7c3aed;font-weight:800}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#ffffffdd;border:1px solid #eee7f1;border-radius:18px;padding:18px;box-shadow:0 8px 24px #5b3b7310}.stat .num{font-size:24px;font-weight:850;margin:7px 0}.pink{background:#fff5fa}.mint{background:#f2fff8}.cream{background:#fffaf0}.lav{background:#f8f5ff}.section{margin-top:18px}.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.tableWrap{overflow:auto;border:1px solid #eee7f1;border-radius:16px;background:#fff}table{width:100%;border-collapse:collapse;min-width:820px}th,td{padding:13px 14px;border-bottom:1px solid #f0edf2;text-align:left;font-size:13px}th{font-size:11px;color:#667085;background:#fff8fc}.badge{display:inline-block;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:750}.badge.active{background:#e9faef;color:#16864b}.badge.disabled{background:#fff0f3;color:#cf2346}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions .btn{padding:7px 10px;font-size:12px}.actionsMenu{position:relative;display:inline-block}.actionsMenuBtn{border:1px solid #eee7f1;background:#fff;border-radius:10px;padding:7px 12px;font-size:16px;line-height:1;color:#5b4b9a;cursor:pointer;font-weight:800}.actionsMenuBtn:hover{background:#f8f5ff}.actionsMenuList{display:none;position:absolute;right:0;top:auto;bottom:calc(100% + 6px);background:#fff;border:1px solid #eee7f1;border-radius:14px;box-shadow:0 16px 40px #11182733;min-width:170px;z-index:60;overflow:hidden}.actionsMenuList.open{display:block}.actionsMenuList button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:0;padding:11px 14px;font-size:13px;font-weight:700;color:#374151;border-bottom:1px solid #f5f2f7;cursor:pointer}.actionsMenuList button:last-child{border-bottom:0}.actionsMenuList button:hover{background:#f8f5ff}.actionsMenuList button.dangerItem{color:#d61f45}.actionsMenuList button.deleteItem{color:#c51f49}.actionsMenuList button.successItem{color:#16864b}.actionsMenuList button.resetItem{color:#2778b9}.editModalCard .field{margin-bottom:10px}
+@media(min-width:951px) and (max-width:1180px){.cards{grid-template-columns:repeat(2,1fr)}.detailGrid{grid-template-columns:1fr}}.side{padding:24px 16px;background:#fff9fdcc;border-right:1px solid #f0e7f2;position:sticky;top:0;height:100vh}.side .logo{width:165px;height:105px}.nav button{width:100%;text-align:left;margin:4px 0;background:transparent;border:0;border-radius:12px;padding:12px;color:#374151}.nav button.active{background:linear-gradient(90deg,#ed78b3,#a578e8);color:#fff}.main{padding:22px 28px 90px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.admin{display:flex;gap:10px;align-items:center}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#f4e8ff;color:#7c3aed;font-weight:800}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#ffffffdd;border:1px solid #eee7f1;border-radius:18px;padding:18px;box-shadow:0 8px 24px #5b3b7310}.stat .num{font-size:24px;font-weight:850;margin:7px 0}.pink{background:#fff5fa}.mint{background:#f2fff8}.cream{background:#fffaf0}.lav{background:#f8f5ff}.section{margin-top:18px}.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.tableWrap{overflow:auto;border:1px solid #eee7f1;border-radius:16px;background:#fff}table{width:100%;border-collapse:collapse;min-width:820px}th,td{padding:13px 14px;border-bottom:1px solid #f0edf2;text-align:left;font-size:13px}th{font-size:11px;color:#667085;background:#fff8fc}.badge{display:inline-block;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:750}.badge.active{background:#e9faef;color:#16864b}.badge.disabled{background:#fff0f3;color:#cf2346}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions .btn{padding:7px 10px;font-size:12px}.actionsMenu{position:relative;display:inline-block}.actionsMenuBtn{border:1px solid #eee7f1;background:#fff;border-radius:10px;padding:7px 12px;font-size:16px;line-height:1;color:#5b4b9a;cursor:pointer;font-weight:800}.actionsMenuBtn:hover{background:#f8f5ff}.actionsMenuList{display:none;position:fixed;right:auto;top:auto;bottom:auto;background:#fff;border:1px solid #eee7f1;border-radius:14px;box-shadow:0 16px 40px #11182733;min-width:170px;z-index:99999;overflow:hidden}.actionsMenuList.open{display:block}.actionsMenuList button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:0;padding:11px 14px;font-size:13px;font-weight:700;color:#374151;border-bottom:1px solid #f5f2f7;cursor:pointer}.actionsMenuList button:last-child{border-bottom:0}.actionsMenuList button:hover{background:#f8f5ff}.actionsMenuList button.dangerItem{color:#d61f45}.actionsMenuList button.deleteItem{color:#c51f49}.actionsMenuList button.successItem{color:#16864b}.actionsMenuList button.resetItem{color:#2778b9}.editModalCard .field{margin-bottom:10px}
 /* ===== V3 PREMIUM ADD-ONS ===== */
 body.pdark{background:#0f1420;color:#e6e9f0}
 body.pdark .side{background:#141a2add;border-right-color:#232b40}
@@ -272,11 +272,7 @@ body:not(.theme-pink):not(.theme-purple) .stat:nth-child(4){box-shadow:inset 4px
 @media(max-width:950px){.premiumHero{grid-template-columns:1fr}.quickGrid,.analyticsGrid{grid-template-columns:1fr 1fr}.premiumFilters{grid-template-columns:1fr 1fr}.notificationPanel{top:62px;right:12px}}
 @media(max-width:560px){.quickGrid,.analyticsGrid{grid-template-columns:1fr 1fr}.premiumFilters{grid-template-columns:1fr}.activityRow{grid-template-columns:1fr}.barChart{height:125px}.quickAction{padding:11px}.quickAction span{font-size:19px}.premiumPanel{padding:15px}}
 
-</style>
-<style id="kp-mobile-action-menu-position-fix">
-.actionsMenuList.kpViewportMenu{position:fixed!important;top:auto;right:auto;bottom:auto;z-index:99999;max-height:calc(100dvh - 16px);overflow-y:auto;}
-</style>
-</head><body>
+</style></head><body>
 <div id="miniLoading" class="miniLoading"><span class="miniSpin"></span><span id="miniLoadingText">Refreshing...</span></div>
 <div id="loginGate" class="approvedGate">
   <div class="kshell">
@@ -452,25 +448,47 @@ function renderCustomers(){let gs=groups();$('content').innerHTML=`<div class="s
 function openCustomer(k){if(!currentCustomer)adminViewHistory.push(adminCurrentView);adminCurrentView='customer-detail';let key=decodeURIComponent(k),g=groups().find(x=>x.key===key);if(!g)return;currentCustomer=g;let first=g.rows[0]||{};$('content').innerHTML=`<button class="linkBtn" onclick="show('customers')">← Back to Customers</button><h2>Customer Details</h2><div class="detailGrid"><div class="card customerCard"><div class="bigAvatar">${esc(g.name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase())}</div><div><h2 style="margin:0 0 7px">${esc(g.name)}</h2><div>☎ ${esc(g.mobile)}</div><div class="muted">${g.rows.filter(r=>r.status==='active').length} active device(s)</div><span class="badge active">Active Customer</span></div></div><div class="card addBox"><b>Add New Trial Device</b><div class="muted">Customer already has ${g.rows.filter(r=>r.status==='active').length} active device(s)</div><div class="price">2-Day Trial / New Device</div><button class="btn primary wide" onclick="addDevice('${encodeURIComponent(g.key)}')">+ Add Trial Device</button></div></div><div class="section card"><div class="sectionHead"><h3>Devices & Licenses</h3><button class="btn danger" onclick="disableAll('${encodeURIComponent(g.key)}')">Disable All Devices</button></div>${deviceTable(g)}</div>`}
 function deviceLabel(r,i){let d=(r.device_id||'').toLowerCase();if(d.includes('iphone'))return ['iPhone','iPhone iOS'];if(d.includes('ipad'))return ['iPad','iPad OS'];if(d.includes('win'))return ['Windows PC','Windows'];if(d.includes('mac'))return ['Mac','macOS'];return ['Device '+(i+1),r.device_id?'Registered device':'Not activated'];}
 function menuId(code){return 'am_'+String(code).replace(/[^a-zA-Z0-9]/g,'')}
-function toggleActionsMenu(id,ev){
-  if(ev){ev.stopPropagation();ev.preventDefault()}
-  document.querySelectorAll('.actionsMenuList.open').forEach(m=>{if(m.id!==id){m.classList.remove('open','kpViewportMenu');m.style.left='';m.style.top='';}});
-  const el=document.getElementById(id); if(!el)return;
-  const opening=!el.classList.contains('open');
-  if(!opening){el.classList.remove('open','kpViewportMenu');el.style.left='';el.style.top='';return;}
-  const btn=(ev&&ev.currentTarget)?ev.currentTarget:el.previousElementSibling;
-  el.classList.add('open','kpViewportMenu');
-  requestAnimationFrame(()=>{
-    const br=btn.getBoundingClientRect(), mr=el.getBoundingClientRect(), gap=6, pad=8;
-    let left=br.right-mr.width;
-    left=Math.max(pad,Math.min(left,window.innerWidth-mr.width-pad));
-    const below=window.innerHeight-br.bottom-gap, above=br.top-gap;
-    let top=(below>=mr.height||below>=above)?br.bottom+gap:br.top-mr.height-gap;
-    top=Math.max(pad,Math.min(top,window.innerHeight-mr.height-pad));
-    el.style.left=left+'px'; el.style.top=top+'px';
+function positionActionsMenu(el,btn){
+  if(!el||!btn||!el.classList.contains('open'))return;
+  const r=btn.getBoundingClientRect();
+  const gap=8;
+  const vw=document.documentElement.clientWidth||window.innerWidth;
+  const vh=document.documentElement.clientHeight||window.innerHeight;
+  const mw=el.offsetWidth||190;
+  const mh=el.offsetHeight||220;
+  let left=r.right-mw;
+  left=Math.max(8,Math.min(left,vw-mw-8));
+  // Prefer ABOVE the 3-dot button, exactly as requested. Only fall below if there is truly no room.
+  let top=r.top-mh-gap;
+  if(top<8 && r.bottom+gap+mh<=vh-8) top=r.bottom+gap;
+  top=Math.max(8,Math.min(top,vh-mh-8));
+  el.style.left=Math.round(left)+'px';
+  el.style.top=Math.round(top)+'px';
+  el.style.right='auto';
+  el.style.bottom='auto';
+}
+function closeActionsMenus(exceptId){
+  document.querySelectorAll('.actionsMenuList.open').forEach(m=>{
+    if(!exceptId||m.id!==exceptId){m.classList.remove('open');m._anchorBtn=null}
   });
 }
-document.addEventListener('click',()=>{document.querySelectorAll('.actionsMenuList.open').forEach(m=>{m.classList.remove('open','kpViewportMenu');m.style.left='';m.style.top='';})});
+function toggleActionsMenu(id,ev){
+  if(ev){ev.stopPropagation();ev.preventDefault()}
+  const el=document.getElementById(id);if(!el)return;
+  const wasOpen=el.classList.contains('open');
+  closeActionsMenus(id);
+  if(wasOpen){el.classList.remove('open');el._anchorBtn=null;return;}
+  el.classList.add('open');
+  el._anchorBtn=(ev&&ev.currentTarget)?ev.currentTarget:el._anchorBtn;
+  requestAnimationFrame(()=>positionActionsMenu(el,el._anchorBtn));
+}
+document.addEventListener('click',()=>closeActionsMenus());
+document.addEventListener('scroll',()=>{
+  document.querySelectorAll('.actionsMenuList.open').forEach(m=>positionActionsMenu(m,m._anchorBtn));
+},true);
+window.addEventListener('resize',()=>{
+  document.querySelectorAll('.actionsMenuList.open').forEach(m=>positionActionsMenu(m,m._anchorBtn));
+});
 function actionsDropdown(r,keyArg){const id=menuId(r.code);const kArg=keyArg?`,'${keyArg}'`:'';const code=esc(r.code);const canDelete=!pv3StaffMode;return `<div class="actionsMenu"><button type="button" class="actionsMenuBtn" onclick="toggleActionsMenu('${id}',event)">⋮</button><div class="actionsMenuList" id="${id}"><button onclick="copyText('${code}');toggleActionsMenu('${id}')">📋 Copy Code</button><button onclick="toggleActionsMenu('${id}');openEditLicense('${code}'${kArg})">✎ Edit</button><button class="resetItem" onclick="toggleActionsMenu('${id}');resetCode('${code}'${kArg})">↺ Reset Device</button>${r.status==='disabled'?`<button class="successItem" onclick="toggleActionsMenu('${id}');enableCode('${code}'${kArg})">✔ Enable</button>`:`<button class="dangerItem" onclick="toggleActionsMenu('${id}');disableCode('${code}'${kArg})">⛔ Disable</button>`}${((String(r.license_type||'').toLowerCase()==='trial')||(!r.license_type&&String(r.code||'').startsWith('TRIAL-')))?`<button class="successItem" onclick="toggleActionsMenu('${id}');convertTrialToPaid('${code}')">★ Convert to Paid / Lifetime</button>`:''}${canDelete?`<button class="deleteItem" onclick="toggleActionsMenu('${id}');deleteDevice('${code}'${kArg})">🗑 Delete</button>`:`<button disabled style="opacity:.4;cursor:not-allowed" title="Staff View is on - Settings la off pannunga">🗑 Delete (hidden)</button>`}</div></div>`}
 function deviceTable(g){return `<div class="tableWrap"><table><thead><tr><th>DEVICE NAME</th><th>DEVICE TYPE</th><th>ACTIVATION CODE</th><th>ACTIVATED ON</th><th>LOGIN LOCATION</th><th>LAST LOGIN</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody>${g.rows.map((r,i)=>{let d=deviceLabel(r,i),loc=[r.login_city,r.login_state,r.login_country].filter(Boolean).join(', ');return `<tr><td><b>${esc(d[0])}</b></td><td>${esc(d[1])}</td><td class="code">${esc(r.code)}${((String(r.license_type||'').toLowerCase()==='trial')||(!r.license_type&&String(r.code||'').startsWith('TRIAL-')))?'<div class="premiumTag" style="margin-top:5px">TRIAL • 2 DAYS</div>':''}</td><td>${r.activated_at?new Date(r.activated_at).toLocaleString():'Waiting for activation'}</td><td>${esc(loc||'Not captured yet')}</td><td>${r.last_login_at?new Date(r.last_login_at).toLocaleString():'-'}</td><td><span class="badge ${esc(r.status)}">${esc(r.status)}</span></td><td>${actionsDropdown(r,encodeURIComponent(g.key))}</td></tr>`}).join('')}</tbody></table></div>`}
 function renderAdd(){ $('content').innerHTML=`<h2>Add License</h2><div class="card"><h3>Create New Customer License</h3><p class="muted">First device or a fresh customer license.</p><div class="formGrid"><input id="customerName" class="field" placeholder="Customer / Shop Name"><input id="mobile" class="field" inputmode="numeric" placeholder="Mobile Number"><input id="amount" class="field" type="number" value="${defaultDevicePrice()}" placeholder="Amount"><button class="btn primary" onclick="generateNew()">Create Paid License</button><button class="btn ghost" onclick="generateTrial()">Create 2-Day Trial</button></div><div id="newCodeArea"></div></div>`}
